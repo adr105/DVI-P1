@@ -21,7 +21,7 @@ var couples = new Array(MAX_CARDS/2);
 MemoryGame.prototype = {
 
 	initGame: function() {
-
+		
 	}
 
 	draw: function() {
@@ -45,6 +45,34 @@ MemoryGame.prototype = {
  * @param {string} id Nombre del sprite que representa la carta
  */
 MemoryGameCard = function(id) {
+	/*Sprite*/
+	var card;
+	var states;
+	var state;
 
+	this.card = id;
+	this.states = new Array("down","up","found");
+	this.state = this.states[0];
 
 };
+
+MemoryGameCard.prototype = {
+
+	flip: function(){
+
+	}
+
+	found: function(){
+
+	}
+
+	compareTo: function(otherCard){
+
+	}
+
+	draw: function(gs, pos){
+
+	}
+
+}
+
