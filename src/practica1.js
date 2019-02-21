@@ -5,15 +5,38 @@
  */
 var MemoryGame = MemoryGame || {};
 
+
+const MAX_CARDS = 16;
+
 /**
  * Constructora de MemoryGame
  */
+
 MemoryGame = function(gs) {
-var test = 0;
+var cards = new Array(MAX_CARDS);
+var couples = new Array(MAX_CARDS/2);
 
 };
 
+MemoryGame.prototype = {
 
+	initGame: function() {
+
+	}
+
+	draw: function() {
+
+	}
+
+	loop: function() {
+
+	}
+
+	onClick: funtion(cardId){
+
+	}
+
+}
 
 /**
  * Constructora de las cartas del juego. Recibe como parámetro el nombre del sprite que representa la carta.
@@ -22,6 +45,6 @@ var test = 0;
  * @param {string} id Nombre del sprite que representa la carta
  */
 MemoryGameCard = function(id) {
-var test = 0;
+
 
 };
