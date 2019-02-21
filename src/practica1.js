@@ -13,14 +13,25 @@ const MAX_CARDS = 16;
  */
 
 MemoryGame = function(gs) {
-var cards = new Array(MAX_CARDS);
-var couples = new Array(MAX_CARDS/2);
+	var cards;
+	var couples;
+	var board;
+	var message;
+	var active;
+
+	this.cards = new Array(MAX_CARDS);
+	this.couples = new Array(MAX_CARDS/2);
+	this.board = gs;
+	this.message = "Memory Game";
+	this.active = true; //game active, not over
+
 
 };
 
 MemoryGame.prototype = {
 
 	initGame: function() {
+
 		/*Declaramos todas las cartas*/
 		this.cards[0] = new MemoryGameCard("8-ball");
 		this.cards[1] = new MemoryGameCard("8-ball");
@@ -41,26 +52,53 @@ MemoryGame.prototype = {
 
 
 		/*Las desordenamos
-			fuente: https://es.stackoverflow.com/questions/21097/desordenar-array-y-a%C3%B1adir-datos-a-otro-array
+			fuente: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 		*/
 
-		unsort(this.cards);
+		var currentIndex = this.cards.length, temporaryValue, randomIndex;
+
+		  // While there remain elements to shuffle...
+		  while (0 !== currentIndex) {
+
+		    // Pick a remaining element...
+		    randomIndex = Math.floor(Math.random() * currentIndex);
+		    currentIndex -= 1;
+
+		    // And swap it with the current element.
+		    temporaryValue = this.cards[currentIndex];
+		    this.cards[currentIndex] = this.cards[randomIndex];
+		    this.cards[randomIndex] = temporaryValue;
+		  }
 	
+		this.loop();
 
-
-	}
+	},
 
 	draw: function() {
+		/*Escribe el mensaje con el estado actual del juego*/
+		this.board.drawMessage(this.message)
 
-	}
+		/*Pide a cada una de las cartas del tablero que se dibujen*/
+		for(var i=0; i <MAX_CARDS; i++){
+			this.cards[i].draw(this.board,i); //i equals to the board pos
+		}
+	},
 
 	loop: function() {
 
+		var gameAux = this;
+		var frameLoop;
+
+		var gameDrawing = function() {
+			gameAux.draw();
+			if(!gameAux.active)
+				clearInterval(frameLoop);
+		}
+		
+		frameLoop = setInterval(function() {gameDrawing()},16);
+
 	}
 
-	onClick: funtion(cardId){
-
-	}
 
 }
 
@@ -88,21 +126,21 @@ MemoryGameCard.prototype = {
 	flop: function(){
 		this.state = this.states[0];
 
-	}
+	},
 
 	flip: function(){
 		this.state = this.states[1];
-	}
+	},
 
 
 	found: function(){
 		this.state = this.states[2];
 
-	}
+	},
 
 	compareTo: function(otherCard){
 		return this.card == otherCard;
-	}
+	},
 
 	draw: function(gs, pos){
 		/*Si está boca abajo, dibujamos el dorso-taile*/
@@ -120,19 +158,4 @@ MemoryGameCard.prototype = {
 
 }
 
-function unsort(deck){
-
-	var desordenado = new Array(MAX_CARDS);
-	while(true){
-		if(!deck.length){break}
-		var sacado = deck.shift();
-		var aleatorio=Math.floor(Math.random()*(desordenado.length+1));
-		var inicio = desordenado.slice(0,aleatorio);
-        var medio = sacado;
-        var fin = desordenado.slice(aleatorio,desordenado.length);
-        desordenado = (inicio).concat(medio).concat(fin);
-
-	}
-return desordenado;
-}
 
