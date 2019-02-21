@@ -9,6 +9,7 @@ var MemoryGame = MemoryGame || {};
  * Constructora de MemoryGame
  */
 MemoryGame = function(gs) {
+var test = 0;
 
 };
 
@@ -21,5 +22,6 @@ MemoryGame = function(gs) {
  * @param {string} id Nombre del sprite que representa la carta
  */
 MemoryGameCard = function(id) {
+var test = 0;
 
 };
