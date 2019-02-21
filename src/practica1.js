@@ -58,21 +58,39 @@ MemoryGameCard = function(id) {
 
 MemoryGameCard.prototype = {
 
-	flip: function(){
+
+	flop: function(){
+		this.state = this.states[0];
 
 	}
 
+	flip: function(){
+		this.state = this.states[1];
+	}
+
+
 	found: function(){
+		this.state = this.states[2];
 
 	}
 
 	compareTo: function(otherCard){
-
+		return this.card == otherCard;
 	}
 
 	draw: function(gs, pos){
+		/*Si está boca abajo, dibujamos el dorso-taile*/
+		if(this.state == this.states[0]){
+			gs.draw("back",pos);
+		}
+		/*Si no, dibujamos el sprite correspondiente*/
+		else{
+			gs.draw(this.card,pos);
+		}
+
 
 	}
+		
 
 }
 
