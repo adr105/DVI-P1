@@ -112,6 +112,7 @@ MemoryGame.prototype = {
 	twosome: function(cardId){
 		var match;
 		match = false;
+		this.message = "Pick a facedown card";
 		for(var i = 0; i < this.couples.length;  i++){
 			if(this.cards[cardId].getGameCard() == this.couples[i]){
 				match = true;
@@ -149,7 +150,7 @@ MemoryGame.prototype = {
 
 		/*Si se pueden hacer cambios, la posición elegida está dentro del board, 
 		  la carta no está ya levantada, */
-		if(this.signal && this.onRange(cardId)){
+		if(this.signal && this.onRange(cardId) && this.card_pick != cardId && !this.twosome(cardId)){
 			this.cards[cardId].flip();
 
 			if(this.card_pick == null){
