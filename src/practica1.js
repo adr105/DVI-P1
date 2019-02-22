@@ -14,17 +14,23 @@ const MAX_CARDS = 16;
 
 MemoryGame = function(gs) {
 	var cards;
-	var couples;
+	var couples; //stores the couples found 
 	var board;
 	var message;
-	var active;
+	var active; //game active or over
+	var count; //counter for the score - matches 
+	var card_pick; 
+	var signal; //acts like a semaphore to stop interactions onClick
+
 
 	this.cards = new Array(MAX_CARDS);
 	this.couples = new Array(MAX_CARDS/2);
 	this.board = gs;
 	this.message = "Memory Game";
-	this.active = true; //game active, not over
-
+	this.active = true; 
+	this.signal = true;
+	this.card_pick = null;
+	this.count = 0;
 
 };
 
@@ -97,6 +103,80 @@ MemoryGame.prototype = {
 		
 		frameLoop = setInterval(function() {gameDrawing()},16);
 
+	},
+
+	onRange: function(pos){
+		return (pos != null && pos >= 0 && pos < MAX_CARDS);
+	},
+
+	twosome: function(cardId){
+		var match;
+		match = false;
+		for(var i = 0; i < this.couples.length;  i++){
+			if(this.cards[cardId].getGameCard() == this.couples[i]){
+				match = true;
+			}
+		}
+
+		return match;
+	},
+
+	reset: function(card1, card2){
+		this.cards[card1].flop();
+		this.cards[card2].flop();
+		this.signal = true;
+		this.card_pick = null;
+
+	},
+
+	endGame: function(cardId){
+
+		if(this.count == MAX_CARDS/2){
+			this.message = "You Win!!";
+			this.active = false;
+			this.signal = false;
+			}
+		else {
+			this.cards[cardId].found();
+			this.cards[this.card_pick].found();
+			this.message = "Match found!!";						
+			this.card_pick = null;
+		}
+	},
+
+
+	onClick: function(cardId){
+
+		/*Si se pueden hacer cambios, la posición elegida está dentro del board, 
+		  la carta no está ya levantada, */
+		if(this.signal && this.onRange(cardId)){
+			this.cards[cardId].flip();
+
+			if(this.card_pick == null){
+				this.card_pick = cardId;
+			}
+
+			else{
+
+				if(this.cards[cardId].compareTo(this.cards[this.card_pick].getGameCard())){
+					this.couples[this.count] = this.cards[cardId].getGameCard();
+					this.count++;
+
+					/* check if game is finished or it's just a match */
+					this.endGame(cardId);
+				}
+				else{
+					this.signal = false; //ignore events 
+					this.message = "Try again";
+					var animation_flop = this;
+					setTimeout(function(){animation_flop.reset(cardId,animation_flop.card_pick)}, 1500);
+				}
+
+			}
+
+
+		}
+
 	}
 
 
@@ -122,6 +202,13 @@ MemoryGameCard = function(id) {
 
 MemoryGameCard.prototype = {
 
+	getGameCard: function(){
+		return this.card;
+	},
+
+	getCardState: function(){
+		return this.state;
+	},
 
 	flop: function(){
 		this.state = this.states[0];
@@ -130,6 +217,7 @@ MemoryGameCard.prototype = {
 
 	flip: function(){
 		this.state = this.states[1];
+
 	},
 
 
@@ -139,7 +227,7 @@ MemoryGameCard.prototype = {
 	},
 
 	compareTo: function(otherCard){
-		return this.card == otherCard;
+		return (this.card == otherCard);
 	},
 
 	draw: function(gs, pos){
