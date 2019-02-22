@@ -112,10 +112,10 @@ MemoryGame.prototype = {
 	twosome: function(cardId){
 		var match;
 		match = false;
-		this.message = "Pick a facedown card";
-		for(var i = 0; i < this.couples.length;  i++){
+		for(var i = 0; i < this.count;  i++){
 			if(this.cards[cardId].getGameCard() == this.couples[i]){
 				match = true;
+				this.message = "Pick a facedown card";
 			}
 		}
 
@@ -140,7 +140,7 @@ MemoryGame.prototype = {
 		else {
 			this.cards[cardId].found();
 			this.cards[this.card_pick].found();
-			this.message = "Match found!!";						
+			this.message = "Match found!! " + (this.count*100/(MAX_CARDS/2)) +"%";						
 			this.card_pick = null;
 		}
 	},
@@ -170,7 +170,7 @@ MemoryGame.prototype = {
 					this.signal = false; //ignore events 
 					this.message = "Try again";
 					var animation_flop = this;
-					setTimeout(function(){animation_flop.reset(cardId,animation_flop.card_pick)}, 1500);
+					setTimeout(function(){animation_flop.reset(cardId,animation_flop.card_pick)}, 1100);
 				}
 
 			}
