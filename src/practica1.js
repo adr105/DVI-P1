@@ -1,3 +1,7 @@
+//Adrián Camacho Pérez
+//Facultad de Informática UCM
+//Desarrollo de Videojuegos Web - P1
+
 /**
  * MemoryGame es la clase que representa nuestro juego. Contiene un array con la cartas del juego,
  * el número de cartas encontradas (para saber cuándo hemos terminado el juego) y un texto con el mensaje
@@ -80,6 +84,8 @@ MemoryGame.prototype = {
 
 	},
 
+	/*Draw the game*/
+
 	draw: function() {
 		/*Escribe el mensaje con el estado actual del juego*/
 		this.board.drawMessage(this.message)
@@ -89,6 +95,8 @@ MemoryGame.prototype = {
 			this.cards[i].draw(this.board,i); //i equals to the board pos
 		}
 	},
+
+	/*Main game loop, draw it*/
 
 	loop: function() {
 
@@ -105,10 +113,13 @@ MemoryGame.prototype = {
 
 	},
 
+	/*Checks if a position is on the board*/
 	onRange: function(pos){
 		return (pos != null && pos >= 0 && pos < MAX_CARDS);
 	},
 
+
+	/*Checks if a pick may be a couple or its was already found*/
 	twosome: function(cardId){
 		var match;
 		match = false;
@@ -122,6 +133,7 @@ MemoryGame.prototype = {
 		return match;
 	},
 
+	/*Flops two cards*/
 	reset: function(card1, card2){
 		this.cards[card1].flop();
 		this.cards[card2].flop();
@@ -130,6 +142,8 @@ MemoryGame.prototype = {
 
 	},
 
+	/*If game ends, stop the play and actions, 
+	  else notifies about a match and shows the % completed*/
 	endGame: function(cardId){
 
 		if(this.count == MAX_CARDS/2){
@@ -148,8 +162,8 @@ MemoryGame.prototype = {
 
 	onClick: function(cardId){
 
-		/*Si se pueden hacer cambios, la posición elegida está dentro del board, 
-		  la carta no está ya levantada, */
+		/*Comprueba si se pueden hacer cambios, la posición elegida está dentro del board, 
+		  la carta no está ya levantada y no es la misma carta */
 		if(this.signal && this.onRange(cardId) && this.card_pick != cardId && !this.twosome(cardId)){
 			this.cards[cardId].flip();
 
@@ -158,7 +172,7 @@ MemoryGame.prototype = {
 			}
 
 			else{
-
+				/*When its a match*/
 				if(this.cards[cardId].compareTo(this.cards[this.card_pick].getGameCard())){
 					this.couples[this.count] = this.cards[cardId].getGameCard();
 					this.count++;
@@ -166,6 +180,7 @@ MemoryGame.prototype = {
 					/* check if game is finished or it's just a match */
 					this.endGame(cardId);
 				}
+				/*When player fails*/
 				else{
 					this.signal = false; //ignore events 
 					this.message = "Try again";
